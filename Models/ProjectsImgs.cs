@@ -1,5 +1,8 @@
-﻿namespace Portale.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Portale.Models
 {
+    [Table("ProjectsImgs")]
     public partial class ProjectsImgs
     {
         public int Id { get; set; }

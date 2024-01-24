@@ -1,12 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Portale.Models
 {
+    [Table("Projects")]
     public partial class Projects
     {
-        public Projects() {
+        public Projects()
+        {
 
             ProjectsImgs = new HashSet<ProjectsImgs>();
+            ProjectsLangs = new HashSet<ProjectsLang>();
         }
         public int Id { get; set; }
         public string? Name { get; set; }
@@ -15,5 +19,6 @@ namespace Portale.Models
         public string? UrlDeploy { get; set; }
 
         public virtual ICollection<ProjectsImgs> ProjectsImgs { get; set; }
+        public virtual ICollection<ProjectsLang> ProjectsLangs { get; set; }
     }
 }
