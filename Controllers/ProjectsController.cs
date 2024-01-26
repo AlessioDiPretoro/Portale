@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Portale.Data;
 using Portale.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 namespace Portale.Controllers
 {
@@ -54,7 +56,7 @@ namespace Portale.Controllers
             return Content(json, "application/json");
         }
 
-
+        [Authorize]
         // GET: api/Projects/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Projects>> GetProjects(int id)
