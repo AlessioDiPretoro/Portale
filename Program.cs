@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Portale.Controllers;
 using Portale.Data;
 using Portale.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -27,20 +29,50 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
+
 //opt => = code for add in swagger authentication bearer
-builder.Services.AddSwaggerGen(
-    opt =>
+//builder.Services.AddSwaggerGen(
+//    opt =>
+//{
+//    opt.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
+//    {
+//        Name = "Authorization",
+//        Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
+//        In = ParameterLocation.Header,
+//        Type = SecuritySchemeType.ApiKey,
+//        Scheme = "Bearer"
+//    });
+//}
+//);
+
+builder.Services.AddSwaggerGen(c =>
 {
-    opt.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
+
+    // Configura l'operazione di sicurezza Bearer
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Name = "Authorization",
-        Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
         In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
+        Description = "Inserisci il token JWT ottenuto da /token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
     });
-}
-);
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
+});
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication();//.AddBearerToken(IdentityConstants.BearerScheme);
@@ -127,6 +159,10 @@ app.UseCors();
 
 app.UseRouting();
 
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapIdentityApi<IdentityUser>();
@@ -170,5 +206,38 @@ using (var scope = app.Services.CreateScope())
         await userManager.AddToRoleAsync(user, "Admin");
     }
 }
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    if (!dbContext.UserInfo.Any())
+    {
+        // La tabella è vuota, crea alcuni post di esempio
+        var userInfo = new UserInfo
+        { Address = "CasaMia", IdentityId = "1",Nation="Italy"
+        };
+
+        dbContext.UserInfo.AddRange(userInfo);
+        dbContext.SaveChanges();
+    }
+}
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    if (!dbContext.Posts.Any())
+    {
+        var posts = new List<Posts>
+            {
+            new Posts {UserInfoId=1, Name = "Post 1", Description = "Descrizione del post 1" },
+            new Posts {UserInfoId=1, Name = "Post 2", Description = "Descrizione del post 2" },
+        };
+
+        dbContext.Posts.AddRange(posts);
+        dbContext.SaveChanges();
+    }
+}
+
 
 app.Run();

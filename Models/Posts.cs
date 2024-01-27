@@ -8,17 +8,17 @@ namespace Portale.Models
     {
         public Posts()
         {
-
             PostImgs = new HashSet<PostImgs>();
             PostTags = new HashSet<PostTags>();
         }
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public string? Github { get; set; }
-        public string? UrlDeploy { get; set; }
 
         public virtual ICollection<PostImgs> PostImgs { get; set; }
         public virtual ICollection<PostTags> PostTags { get; set; }
+        public int UserInfoId { get; set; }
+        [ForeignKey("UserInfoId")]
+        public virtual UserInfo UserInfo { get; set; } = null!;
     }
 }

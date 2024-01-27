@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
 using Portale.Models;
 
@@ -20,6 +21,7 @@ namespace Portale.Data
         public virtual DbSet<PostTags> PostTags { get; set; } = null!;
         public virtual DbSet<PostImgs> PostImgs { get; set; } = null!;
         public virtual DbSet<Tags> Tags { get; set; } = null!;
+        public virtual DbSet<UserInfo> UserInfo { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,7 +52,13 @@ namespace Portale.Data
             modelBuilder.Entity<PostTags>()
                 .HasOne(pl => pl.Tags)
                 .WithMany(l => l.PostTags)
-                .HasForeignKey(pl => pl.TagId);
+            .HasForeignKey(pl => pl.TagId);
+
+            modelBuilder.Entity<Posts>()
+            .HasOne(p => p.UserInfo)
+            .WithMany(u => u.Posts)
+            .HasForeignKey(p => p.UserInfoId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         }
     }

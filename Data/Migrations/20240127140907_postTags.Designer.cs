@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Portale.Data;
 
@@ -11,9 +12,11 @@ using Portale.Data;
 namespace Portale.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240127140907_postTags")]
+    partial class postTags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -300,12 +303,7 @@ namespace Portale.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserInfoId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserInfoId");
 
                     b.ToTable("Posts");
                 });
@@ -398,35 +396,6 @@ namespace Portale.Data.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("Portale.Models.UserInfo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cap")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IdentityId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserInfo");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -508,17 +477,6 @@ namespace Portale.Data.Migrations
                     b.Navigation("Tags");
                 });
 
-            modelBuilder.Entity("Portale.Models.Posts", b =>
-                {
-                    b.HasOne("Portale.Models.UserInfo", "UserInfo")
-                        .WithMany("Posts")
-                        .HasForeignKey("UserInfoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserInfo");
-                });
-
             modelBuilder.Entity("Portale.Models.ProjectsImgs", b =>
                 {
                     b.HasOne("Portale.Models.Projects", "Projects")
@@ -571,11 +529,6 @@ namespace Portale.Data.Migrations
             modelBuilder.Entity("Portale.Models.Tags", b =>
                 {
                     b.Navigation("PostTags");
-                });
-
-            modelBuilder.Entity("Portale.Models.UserInfo", b =>
-                {
-                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }
