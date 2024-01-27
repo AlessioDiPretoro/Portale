@@ -16,6 +16,11 @@ namespace Portale.Data
         public virtual DbSet<Languages> Languages { get; set; } = null!;
         public virtual DbSet<ProjectsLang> ProjectsLang { get; set; } = null!;
 
+        public virtual DbSet<Posts> Posts { get; set; } = null!;
+        public virtual DbSet<PostTags> PostTags { get; set; } = null!;
+        public virtual DbSet<PostImgs> PostImgs { get; set; } = null!;
+        public virtual DbSet<Tags> Tags { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -32,6 +37,21 @@ namespace Portale.Data
                 .HasOne(pl => pl.Languages)
                 .WithMany(l => l.ProjectsLangs)
                 .HasForeignKey(pl => pl.LanguagesId);
+
+
+            modelBuilder.Entity<PostTags>()
+                .HasKey(pl => new { pl.PostId, pl.TagId });
+
+            modelBuilder.Entity<PostTags>()
+                .HasOne(pl => pl.Posts)
+                .WithMany(p => p.PostTags)
+                .HasForeignKey(pl => pl.PostId);
+
+            modelBuilder.Entity<PostTags>()
+                .HasOne(pl => pl.Tags)
+                .WithMany(l => l.PostTags)
+                .HasForeignKey(pl => pl.TagId);
+
         }
     }
 }
