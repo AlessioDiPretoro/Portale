@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Portale.Data;
 
@@ -11,9 +12,11 @@ using Portale.Data;
 namespace Portale.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240127182451_postUsersNewRel")]
+    partial class postUsersNewRel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -249,7 +252,7 @@ namespace Portale.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Languages", (string)null);
+                    b.ToTable("Languages");
                 });
 
             modelBuilder.Entity("Portale.Models.PostImgs", b =>
@@ -274,7 +277,7 @@ namespace Portale.Data.Migrations
 
                     b.HasIndex("PostsId");
 
-                    b.ToTable("PostImgs", (string)null);
+                    b.ToTable("PostImgs");
                 });
 
             modelBuilder.Entity("Portale.Models.PostTags", b =>
@@ -292,7 +295,7 @@ namespace Portale.Data.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("PostTags", (string)null);
+                    b.ToTable("PostTags");
                 });
 
             modelBuilder.Entity("Portale.Models.Posts", b =>
@@ -342,7 +345,7 @@ namespace Portale.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("Portale.Models.ProjectsImgs", b =>
@@ -364,7 +367,7 @@ namespace Portale.Data.Migrations
 
                     b.HasIndex("ProjectsId");
 
-                    b.ToTable("ProjectsImgs", (string)null);
+                    b.ToTable("ProjectsImgs");
                 });
 
             modelBuilder.Entity("Portale.Models.ProjectsLang", b =>
@@ -382,7 +385,7 @@ namespace Portale.Data.Migrations
 
                     b.HasIndex("LanguagesId");
 
-                    b.ToTable("ProjectsLang", (string)null);
+                    b.ToTable("ProjectsLang");
                 });
 
             modelBuilder.Entity("Portale.Models.Tags", b =>
@@ -405,7 +408,7 @@ namespace Portale.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags", (string)null);
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Portale.Models.UserInfo", b =>
@@ -425,18 +428,18 @@ namespace Portale.Data.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
+                    b.Property<string>("IdentityId")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Nation")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("IdentityId")
+                        .IsUnique()
+                        .HasFilter("[IdentityId] IS NOT NULL");
 
                     b.ToTable("UserInfo", (string)null);
                 });
@@ -572,13 +575,12 @@ namespace Portale.Data.Migrations
 
             modelBuilder.Entity("Portale.Models.UserInfo", b =>
                 {
-                    b.HasOne("Portale.Data.UserConnector", "User")
+                    b.HasOne("Portale.Data.UserConnector", "Identity")
                         .WithOne("UserInfo")
-                        .HasForeignKey("Portale.Models.UserInfo", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Portale.Models.UserInfo", "IdentityId")
+                        .HasConstraintName("FK_User_AspNetUsers");
 
-                    b.Navigation("User");
+                    b.Navigation("Identity");
                 });
 
             modelBuilder.Entity("Portale.Models.Languages", b =>

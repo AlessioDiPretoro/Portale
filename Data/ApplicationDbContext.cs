@@ -54,12 +54,36 @@ namespace Portale.Data
                 .WithMany(l => l.PostTags)
             .HasForeignKey(pl => pl.TagId);
 
-            modelBuilder.Entity<Posts>()
-            .HasOne(p => p.UserInfo)
-            .WithMany(u => u.Posts)
-            .HasForeignKey(p => p.UserInfoId)
-            .OnDelete(DeleteBehavior.Cascade);
+            //modelBuilder.Entity<Posts>()
+            //.HasOne(p => p.UserInfo)
+            //.WithMany(u => u.Posts)
+            //.HasForeignKey(p => p.UserInfoId)
+            //.OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Posts>(entity =>
+            {
+                entity.ToTable("Posts");
+
+                entity.Property(e => e.Name).HasMaxLength(255);
+
+                entity.HasOne(d => d.UserInfo).WithMany(p => p.Posts)
+                    .HasForeignKey(d => d.UserInfoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Post_User");
+            });
+
+            modelBuilder.Entity<UserInfo>(entity =>
+            {
+                entity.ToTable("UserInfo");
+
+                entity.Property(e => e.UserId).HasMaxLength(450);
+
+                modelBuilder.Entity<UserConnector>()
+                    .HasOne(u => u.UserInfo)
+                    .WithOne(p => p.User)
+                    .HasForeignKey<UserInfo>(p => p.UserId);
+
+            });
         }
     }
 }
