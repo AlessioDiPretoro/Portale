@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Portale.Data;
@@ -18,7 +20,13 @@ namespace Portale.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public PostsController(ApplicationDbContext context)
+        public partial class CreatePostRequest
+        { 
+            public string? Name { get; set; }
+            public string? Description { get; set; }
+        }
+
+            public PostsController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -75,16 +83,34 @@ namespace Portale.Controllers
             return NoContent();
         }
 
-        // POST: api/Posts
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/Posts create Post
         [HttpPost]
-        public async Task<ActionResult<Posts>> PostPosts(Posts posts)
+        public async Task<ActionResult<CreatePostRequest>> PostPosts(CreatePostRequest crp)
         {
+            Posts posts = new Posts();
+            posts.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            posts.Name = crp.Name;
+            posts.Description = crp.Description;
             _context.Posts.Add(posts);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPosts", new { id = posts.Id }, posts);
         }
+
+
+        // POST: api/Posts
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<Posts>> PostPosts(Posts posts)
+        //{
+
+        //    UserInfo loggedUser = new UserInfo();
+        //    posts.UserInfoId = loggedUser.Id;
+        //    _context.Posts.Add(posts);
+        //    await _context.SaveChangesAsync();
+
+        //    return CreatedAtAction("GetPosts", new { id = posts.Id }, posts);
+        //}
 
         // DELETE: api/Posts/5
         [HttpDelete("{id}")]

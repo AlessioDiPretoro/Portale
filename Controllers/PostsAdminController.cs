@@ -22,7 +22,7 @@ namespace Portale.Controllers
         // GET: PostsAdmin
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Posts.Include(p => p.UserInfo);
+            var applicationDbContext = _context.Posts.Include(p => p.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -35,7 +35,7 @@ namespace Portale.Controllers
             }
 
             var posts = await _context.Posts
-                .Include(p => p.UserInfo)
+                .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (posts == null)
             {
@@ -48,7 +48,11 @@ namespace Portale.Controllers
         // GET: PostsAdmin/Create
         public IActionResult Create()
         {
-            ViewData["UserInfoId"] = new SelectList(_context.UserInfo, "Id", "Id");
+            //List<UserInfo> users = new List<UserInfo>();
+            //users = _context.UserInfo.ToList();
+            //ViewBag.UserInfoId = new SelectList(users, "Id", "Nation");
+
+            ViewData["UserInfoId"] = new SelectList(_context.Users, "Id", "Nation");
             return View();
         }
 
@@ -65,7 +69,7 @@ namespace Portale.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserInfoId"] = new SelectList(_context.UserInfo, "Id", "Id", posts.UserInfoId);
+            ViewData["UserInfoId"] = new SelectList(_context.Users, "Id", "Id", posts.UserId);
             return View(posts);
         }
 
@@ -82,7 +86,7 @@ namespace Portale.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserInfoId"] = new SelectList(_context.UserInfo, "Id", "Id", posts.UserInfoId);
+            ViewData["UserInfoId"] = new SelectList(_context.Users, "Id", "Id", posts.UserId);
             return View(posts);
         }
 
@@ -118,7 +122,7 @@ namespace Portale.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserInfoId"] = new SelectList(_context.UserInfo, "Id", "Id", posts.UserInfoId);
+            ViewData["UserInfoId"] = new SelectList(_context.Users, "Id", "Id", posts.UserId);
             return View(posts);
         }
 
@@ -131,7 +135,7 @@ namespace Portale.Controllers
             }
 
             var posts = await _context.Posts
-                .Include(p => p.UserInfo)
+                .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (posts == null)
             {

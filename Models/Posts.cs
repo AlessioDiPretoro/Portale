@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Portale.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Portale.Models
@@ -17,8 +18,8 @@ namespace Portale.Models
 
         public virtual ICollection<PostImgs> PostImgs { get; set; }
         public virtual ICollection<PostTags> PostTags { get; set; }
-        public int UserInfoId { get; set; }
-        [ForeignKey("UserInfoId")]
-        public virtual UserInfo UserInfo { get; set; } = null!;
+        public string? UserId { get; set; }
+        [ForeignKey("UserId")]
+        public UserAdditionalInfo User { get; set; } = null!;
     }
 }

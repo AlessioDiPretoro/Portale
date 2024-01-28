@@ -72,7 +72,7 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication();//.AddBearerToken(IdentityConstants.BearerScheme);
 
-builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+builder.Services.AddIdentityApiEndpoints<UserAdditionalInfo>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -147,7 +147,7 @@ app.MapControllerRoute(
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapIdentityApi<IdentityUser>();
+app.MapIdentityApi<UserAdditionalInfo>();
 
 //for upload files
 app.UseStaticFiles();
@@ -173,14 +173,14 @@ using (var scope = app.Services.CreateScope())
 //admin manager: verify if admin user exist and create it assigning role
 using (var scope = app.Services.CreateScope())
 {
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserAdditionalInfo>>();
 
     string email = "admin@admin.com"; 
     string password = "Admin1@"; 
 
     if(await userManager.FindByEmailAsync(email) == null)
     {
-        var user = new IdentityUser();
+        var user = new UserAdditionalInfo();
         user.Email = email;
         user.UserName = email;
         user.EmailConfirmed = true;
