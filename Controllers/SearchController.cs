@@ -9,7 +9,7 @@ using Portale.Models;
 namespace Portale.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
     [ApiController]
     public class SearchController : ControllerBase
     {
@@ -20,33 +20,31 @@ namespace Portale.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<string[]>> GetUsers(string toSearch)
+        public class UserResponse
         {
-            if (toSearch.Length < 2)
+            public string? UserName { get; set; }
+            public string? Email { get; set; }
+            public string? Description { get; set; }
+        }
+
+        [HttpGet]
+        [Route("api/search-user")]
+        public async Task<ActionResult<List<UserResponse>>> GetUsers(string key)
+        {
+            if (key.Length < 2)
             {
                 return NotFound();
             }
-            List<string> response = new List<string>();
 
-            List<UserAdditionalInfo> additionalInfo = await _context.Users
+            List<UserResponse> additionalInfo = await _context.Users
                 .OfType<UserAdditionalInfo>()
-                .Where(u => EF.Functions.Like(u.UserName, $"%{toSearch}%") ||
-                            EF.Functions.Like(u.Email, $"%{toSearch}%") ||
-                            EF.Functions.Like(u.Description, $"%{toSearch}%"))
+                .Where(u => EF.Functions.Like(u.UserName, $"%{key}%") ||
+                            EF.Functions.Like(u.Email, $"%{key}%") ||
+                            EF.Functions.Like(u.Description, $"%{key}%"))
+                .Select(u => new UserResponse { Description = u.Description, UserName = u.UserName, Email = u.Email })
                 .ToListAsync();
 
-            if (additionalInfo.Count == 0)
-            {
-                return NotFound();
-            }
-
-            foreach (IdentityUser user in additionalInfo)
-            {
-                response.Add(user.UserName);
-            }
-
-            return response.ToArray();
+            return additionalInfo;
         }
     }
 }
