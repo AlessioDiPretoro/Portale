@@ -55,7 +55,7 @@ namespace Portale.Settings
 
 					imgLow.Save(filePath);
 				}
-				settingsResponse.SuccessMessage = "Img succesufully saved as: " + fileName;
+				settingsResponse.SuccessMessage = fileName;
 				settingsResponse.IsSuccess = true;
 			}
 			else

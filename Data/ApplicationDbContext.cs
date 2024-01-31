@@ -21,6 +21,7 @@ namespace Portale.Data
 		public virtual DbSet<PostTags> PostTags { get; set; } = null!;
 		public virtual DbSet<PostImgs> PostImgs { get; set; } = null!;
 		public virtual DbSet<Tags> Tags { get; set; } = null!;
+		public virtual DbSet<UserProfileImgs> UserProfileImgs { get; set; } = null!;
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -63,6 +64,11 @@ namespace Portale.Data
 					.OnDelete(DeleteBehavior.ClientSetNull)
 					.HasConstraintName("FK_Post_User");
 			});
+
+			modelBuilder.Entity<UserProfileImgs>()
+					.HasOne(d => d.User)
+					.WithMany(i => i.UserProfileImgs)
+					.HasForeignKey(d => d.UserId);
 		}
 	}
 }

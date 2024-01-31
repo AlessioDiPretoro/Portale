@@ -11,5 +11,6 @@ namespace Portale.Data
 		public string? Cap { get; set; }
 		public string? Description { get; set; }
 		public virtual ICollection<Posts> Posts { get; set; } = new List<Posts>();
+		public virtual ICollection<UserProfileImgs> UserProfileImgs { get; set; } = new List<UserProfileImgs>();
 	}
 }
