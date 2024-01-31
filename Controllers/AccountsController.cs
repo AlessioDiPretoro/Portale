@@ -251,19 +251,6 @@ namespace Portale.Controllers
 			return Ok(userProfileImgs);
 		}
 
-		[Authorize]
-		[HttpGet("me")]
-		public async Task<IActionResult> UserMe()
-		{
-			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-			ApplicationUser user = await _context.Users.FindAsync(userId);
-			if (user == null)
-			{
-				return BadRequest("User not found");
-			}
-			return Ok(user);
-		}
-
 		#endregion Profile Images
 	}
 }

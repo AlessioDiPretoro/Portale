@@ -17,7 +17,7 @@ namespace Portale.Models
         public string? Name { get; set; }
         public string? Description { get; set; }
 
-        public virtual ICollection<PostImgs> PostImgs { get; set; }
+        public virtual ICollection<PostImgs> PostImgs { get; set; } = new List<PostImgs>();
         public virtual ICollection<PostTags> PostTags { get; set; }
         public string? UserId { get; set; }
 
