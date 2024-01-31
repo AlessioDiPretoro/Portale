@@ -12,6 +12,7 @@ namespace Portale.Models
             PostImgs = new HashSet<PostImgs>();
             PostTags = new HashSet<PostTags>();
         }
+
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
@@ -19,7 +20,8 @@ namespace Portale.Models
         public virtual ICollection<PostImgs> PostImgs { get; set; }
         public virtual ICollection<PostTags> PostTags { get; set; }
         public string? UserId { get; set; }
+
         [ForeignKey("UserId")]
-        public UserAdditionalInfo User { get; set; } = null!;
+        public ApplicationUser User { get; set; } = null!;
     }
 }

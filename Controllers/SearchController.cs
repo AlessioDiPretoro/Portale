@@ -37,7 +37,7 @@ namespace Portale.Controllers
             }
 
             List<UserResponse> additionalInfo = await _context.Users
-                .OfType<UserAdditionalInfo>()
+                .OfType<ApplicationUser>()
                 .Where(u => EF.Functions.Like(u.UserName, $"%{key}%") ||
                             EF.Functions.Like(u.Email, $"%{key}%") ||
                             EF.Functions.Like(u.Description, $"%{key}%"))

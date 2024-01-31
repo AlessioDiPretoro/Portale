@@ -415,7 +415,7 @@ namespace Portale.Data.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("Portale.Data.UserAdditionalInfo", b =>
+            modelBuilder.Entity("Portale.Data.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -431,7 +431,7 @@ namespace Portale.Data.Migrations
                     b.Property<string>("Nation")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("UserAdditionalInfo");
+                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -517,7 +517,7 @@ namespace Portale.Data.Migrations
 
             modelBuilder.Entity("Portale.Models.Posts", b =>
                 {
-                    b.HasOne("Portale.Data.UserAdditionalInfo", "User")
+                    b.HasOne("Portale.Data.ApplicationUser", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_Post_User");
@@ -579,7 +579,7 @@ namespace Portale.Data.Migrations
                     b.Navigation("PostTags");
                 });
 
-            modelBuilder.Entity("Portale.Data.UserAdditionalInfo", b =>
+            modelBuilder.Entity("Portale.Data.ApplicationUser", b =>
                 {
                     b.Navigation("Posts");
                 });

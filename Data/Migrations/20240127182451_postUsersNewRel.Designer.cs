@@ -444,11 +444,11 @@ namespace Portale.Data.Migrations
                     b.ToTable("UserInfo", (string)null);
                 });
 
-            modelBuilder.Entity("Portale.Data.UserAdditionalInfo", b =>
+            modelBuilder.Entity("Portale.Data.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.HasDiscriminator().HasValue("UserAdditionalInfo");
+                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -575,7 +575,7 @@ namespace Portale.Data.Migrations
 
             modelBuilder.Entity("Portale.Models.UserInfo", b =>
                 {
-                    b.HasOne("Portale.Data.UserAdditionalInfo", "Identity")
+                    b.HasOne("Portale.Data.ApplicationUser", "Identity")
                         .WithOne("UserInfo")
                         .HasForeignKey("Portale.Models.UserInfo", "IdentityId")
                         .HasConstraintName("FK_User_AspNetUsers");
@@ -612,7 +612,7 @@ namespace Portale.Data.Migrations
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("Portale.Data.UserAdditionalInfo", b =>
+            modelBuilder.Entity("Portale.Data.ApplicationUser", b =>
                 {
                     b.Navigation("UserInfo")
                         .IsRequired();
