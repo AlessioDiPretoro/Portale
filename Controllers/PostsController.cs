@@ -89,7 +89,7 @@ namespace Portale.Controllers
 
 		// POST: api/Posts create Post
 		[HttpPost]
-		public async Task<ActionResult<CreatePostRequest>> PostPosts(CreatePostRequest crp)
+		public async Task<ActionResult<CreatePostRequest>> CreatePost(CreatePostRequest crp)
 		{
 			Posts posts = new Posts
 			{
