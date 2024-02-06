@@ -156,7 +156,7 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
 	var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-	var roles = new[] { "Admin", "Manager", "User" };
+	var roles = new[] { "Admin", "Manager", "User", "Customer", "Employee" };
 
 	foreach (var role in roles)
 	{
