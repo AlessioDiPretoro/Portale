@@ -41,7 +41,7 @@ namespace Portale.Data
 				.HasForeignKey(pl => pl.LanguagesId);
 
 			modelBuilder.Entity<PostTags>()
-				.HasKey(pl => new { pl.PostId, pl.TagId });
+				.HasKey(pl => new { pl.Id });
 
 			modelBuilder.Entity<PostTags>()
 				.HasOne(pl => pl.Posts)

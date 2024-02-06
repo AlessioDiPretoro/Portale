@@ -35,7 +35,7 @@ namespace Portale.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<Tags>>> GetTags()
 		{
-			return await _context.Tags.ToListAsync();
+			return await _context.Tags.Include(p => p.PostTags).ToListAsync();
 		}
 
 		// GET: api/Tags/5
