@@ -32,8 +32,6 @@ namespace Portale.Data
 
 		public virtual DbSet<CategorySupplier> CategorySuppliers { get; set; }
 
-		public virtual DbSet<Client> Clients { get; set; }
-
 		public virtual DbSet<Contact> Contacts { get; set; }
 
 		public virtual DbSet<Ddt> Ddts { get; set; }
@@ -174,13 +172,6 @@ namespace Portale.Data
 				entity.HasOne(d => d.Supplier).WithMany(p => p.CategorySuppliers).HasForeignKey(d => d.SupplierId);
 			});
 
-			modelBuilder.Entity<Client>(entity =>
-			{
-				entity.ToTable("Client");
-
-				entity.Property(e => e.PIva).HasColumnName("P_Iva");
-			});
-
 			modelBuilder.Entity<Ddt>(entity =>
 			{
 				entity.ToTable("Ddt");
@@ -210,18 +201,18 @@ namespace Portale.Data
 			{
 				entity.ToTable("Fidelity");
 
-				entity.HasIndex(e => e.ClientId, "IX_Fidelity_ClientId");
+				entity.HasIndex(e => e.UserId, "IX_Fidelity_UserId");
 
-				entity.HasOne(d => d.Client).WithMany(p => p.Fidelities).HasForeignKey(d => d.ClientId);
+				entity.HasOne(d => d.User).WithMany(p => p.Fidelities).HasForeignKey(d => d.UserId);
 			});
 
 			modelBuilder.Entity<Invoice>(entity =>
 			{
 				entity.ToTable("Invoice");
 
-				entity.HasIndex(e => e.ClientId, "IX_Invoice_ClientId");
+				entity.HasIndex(e => e.UserId, "IX_Invoice_UserId");
 
-				entity.HasOne(d => d.Client).WithMany(p => p.Invoices).HasForeignKey(d => d.ClientId);
+				entity.HasOne(d => d.User).WithMany(p => p.Invoices).HasForeignKey(d => d.UserId);
 			});
 
 			modelBuilder.Entity<InvoiceDetail>(entity =>
@@ -282,9 +273,9 @@ namespace Portale.Data
 			{
 				entity.ToTable("Sale");
 
-				entity.HasIndex(e => e.ClientId, "IX_Sale_ClientId");
+				entity.HasIndex(e => e.UserId, "IX_Sale_UserId");
 
-				entity.HasOne(d => d.Client).WithMany(p => p.Sales).HasForeignKey(d => d.ClientId);
+				entity.HasOne(d => d.User).WithMany(p => p.Sales).HasForeignKey(d => d.UserId);
 			});
 
 			modelBuilder.Entity<SaleDetail>(entity =>

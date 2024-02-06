@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Portale.Data;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Portale.Models;
 
@@ -7,7 +9,6 @@ public partial class Sale
 {
     public int Id { get; set; }
 
-    public int ClientId { get; set; }
 
     public string? CheckOut { get; set; }
 
@@ -18,8 +19,10 @@ public partial class Sale
     public string? Extra { get; set; }
 
     public int? Discount { get; set; }
+	public string? UserId { get; set; }
 
-    public virtual Client Client { get; set; } = null!;
+	[ForeignKey("UserId")]
+	public ApplicationUser User { get; set; } = null!;
 
-    public virtual ICollection<SaleDetail> SaleDetails { get; set; } = new List<SaleDetail>();
+	public virtual ICollection<SaleDetail> SaleDetails { get; set; } = new List<SaleDetail>();
 }
