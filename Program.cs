@@ -25,7 +25,11 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSet
 // Add services to the container. DefaultConnection
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-	options.UseSqlServer(connectionString));
+	options.UseSqlServer(connectionString,
+				options => options.EnableRetryOnFailure(
+					maxRetryCount: 5,
+					maxRetryDelay: System.TimeSpan.FromSeconds(30),
+					errorNumbersToAdd: null)));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 #region Swagger
@@ -114,19 +118,14 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
 	app.UseMigrationsEndPoint();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 else
 {
 	app.UseExceptionHandler("/Error");
 	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 	app.UseHsts();
-}
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-	app.UseSwagger();
-	app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
@@ -156,7 +155,7 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
 	var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-	var roles = new[] { "Admin", "Manager", "User", "Customer", "Employee" };
+	var roles = new[] { "Admin", "Manager", "User", "Customer", "Employee","DockerNew" };
 
 	foreach (var role in roles)
 	{

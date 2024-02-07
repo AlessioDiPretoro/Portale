@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  web_api:
+    image: portale
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:8080"
+    depends_on:
+      - sql_server
+    command: ["./wait-for-it.sh", "sql_server:1433", "--", "dotnet", "Portale.dll"]
+
+  sql_server:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    ports:
+      - 1433:1433
+    environment:
+      SA_PASSWORD: "A&VeryComplex123Password"
+      ACCEPT_EULA: "Y"
