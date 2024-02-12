@@ -154,13 +154,25 @@ app.MapControllers();
 //roles manager: declare roles, verify if them exist and create them on db
 using (var scope = app.Services.CreateScope())
 {
-	var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-	var roles = new[] { "Admin", "Manager", "User", "Customer", "Employee","DockerNew" };
+	var services = scope.ServiceProvider;
 
-	foreach (var role in roles)
+	try
 	{
-		if (!await roleManager.RoleExistsAsync(role))
-			await roleManager.CreateAsync(new IdentityRole(role));
+		var dbContext = services.GetRequiredService<ApplicationDbContext>(); // Sostituisci con il tuo DbContext
+		dbContext.Database.Migrate();
+		var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+		var roles = new[] { "Admin", "Manager", "User", "Customer", "Employee", "DockerNew" };
+
+		foreach (var role in roles)
+		{
+			if (!await roleManager.RoleExistsAsync(role))
+				await roleManager.CreateAsync(new IdentityRole(role));
+		}
+	}
+	catch (Exception ex)
+	{
+		var logger = services.GetRequiredService<ILogger<Program>>();
+		logger.LogError(ex, "An error occurred while migrating the database.");
 	}
 }
 
